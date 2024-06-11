@@ -1,9 +1,7 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {Image, StyleSheet, Button} from 'react-native'
 
-import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import * as Notifications from 'expo-notifications'
 
 export default function HomeScreen() {
   return (
@@ -15,37 +13,33 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      <Button
+        title="Request permission"
+        onPress={() => {
+          Notifications.requestPermissionsAsync()
+        }}
+      />
+      <Button
+        title="Create a notification that adds a badge"
+        onPress={() => {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              badge: 1,
+              title: 'Test notification',
+              body: 'This is a test notification',
+            },
+            trigger: {
+              date: Date.now() + 2e3,
+            },
+          })
+        }}
+      />
+      <Button
+        title="Clear the badge"
+        onPress={() => {
+          Notifications.setBadgeCountAsync(0)
+        }}
+      />
     </ParallaxScrollView>
   );
 }
